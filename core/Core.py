@@ -8,6 +8,6 @@ class Core:
         term = Terminal()
 
         with term.cbreak():
-            key = term.inkey(timeout=3)
+            key = term.inkey()
             print(f"You pressed: {key}")
     
