@@ -1,4 +1,6 @@
-from blessed.terminal import Terminal
+from pathlib import Path
+import tcod
+from core.model.Character import Character
 
 from core.model.World import World
 
@@ -9,75 +11,70 @@ class Core:
         self.column = 0
 
     def run(self) -> None:
-        term = Terminal()
-
+        BASE_DIR = Path(__file__).resolve().parent.parent
+        FONT_PATH = BASE_DIR / "assets/fonts/terminal16x16_gs_ro.png"
+        tileset = tcod.tileset.load_tilesheet(
+            FONT_PATH,
+            16,
+            16,
+            tcod.tileset.CHARMAP_CP437
+        )
         world = World(
-            rows=50, 
-            columns=100
+            rows=40, 
+            columns=40
+        )
+        character = Character(
+            x=0,
+            y=0            
         )
         world.generate()
 
-        with term.fullscreen(), term.cbreak(), term.hidden_cursor():
+        with tcod.context.new_terminal(
+            columns=world.columns,
+            rows=world.rows,
+            tileset=tileset,
+            title="Text of The Necromancer"
+        ) as context:
+            console = tcod.console.Console(
+                width=world.columns, 
+                height=world.rows
+            )
             while self.is_running:
-                key = term.inkey(timeout=0.016)
+                console.clear()
 
-                if key == "q":
-                    self.is_running = False
-                    break     
-
-                if key.code == term.KEY_LEFT:
-                    world.invalidate()
-                    self.column -= 1
-
-                if key.code == term.KEY_RIGHT:
-                    world.invalidate()
-                    self.column += 1                    
-
-                if key.code == term.KEY_UP:
-                    world.invalidate()
-                    self.row -= 1
-
-                if key.code == term.KEY_DOWN:
-                    world.invalidate()
-                    self.row += 1                                        
-
-                if self.row < 0:
-                    self.row = 0
-
-                if self.column < 0:
-                    self.column = 0
-
-                if self.column > world.columns - 1:
-                    self.column = world.columns - 1
-
-                if self.row > world.rows - 1:
-                    self.row = world.rows - 1            
-
-                if world.is_valid == False:                    
-                    print(
-                        term.home + term.clear, 
-                        end=""
+                for r in range(world.rows):
+                    for c in range(world.columns):
+                        cell = world.get_cell(r, c)
+                        console.print(
+                            cell.x,
+                            cell.y,
+                            cell.char,
+                            fg=cell.color
                     )
 
-                    world_as_string = ""
+                console.print(
+                    character.x, 
+                    character.y, 
+                    character.char,
+                    fg=character.color
+                )
 
-                    for row in range(world.rows):
-                        for column in range(world.columns):
-                            world_as_string += term.white(world.get_cell(row, column).char)
-                        world_as_string += "\n"
+                context.present(console)
 
-                    print(
-                        world_as_string,
-                        end="",
-                        flush=True
-                    ) 
+                for event in tcod.event.wait():
+                    if event.type == "QUIT":
+                        self.is_running = False
+                        break     
 
-                    print(
-                        term.move_xy(self.column, self.row) + term.green("@"),
-                        end="",
-                        flush=True
-                    )
+                    if isinstance(event, tcod.event.KeyDown):
+                        if (event.sym == tcod.event.KeySym.W):
+                            character.move(world, 0, -1)
+                        elif (event.sym == tcod.event.KeySym.S):
+                            character.move(world, 0, 1)
+                        elif (event.sym == tcod.event.KeySym.A):
+                            character.move(world, -1, 0)
+                        elif (event.sym == tcod.event.KeySym.D):
+                            character.move(world, 1, 0)                                                                                    
 
-                    world.validate()
-
+        
     
