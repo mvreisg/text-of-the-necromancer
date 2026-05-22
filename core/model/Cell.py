@@ -1,3 +1,4 @@
+import tcod
 from random import Random
 
 
@@ -14,5 +15,13 @@ class Cell:
         )
         self.need_redraw = need_redraw
 
-    def set_redraw_state(self, need_redraw: bool) -> None:
+    def tick(self) -> None:
+        pass
+
+    def render(self, console: tcod.console.Console) -> None:
+        if self.need_redraw:
+            console.print(self.x, self.y, self.char, fg=self.color)
+            self.set_need_redraw_state(False)
+
+    def set_need_redraw_state(self, need_redraw: bool) -> None:
         self.need_redraw = need_redraw
