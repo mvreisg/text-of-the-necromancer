@@ -57,7 +57,7 @@ class Character:
         if desired_x < minX:
             return False
 
-        if desired_x >= maxX:
+        if desired_x > maxX:
             return False
 
         if desired_y < minY:
