@@ -1,18 +1,16 @@
 import tcod
 from core.infrastructure.input.KeyCode import KeyCode
 from core.infrastructure.input.Keyboard import Keyboard
-from core.model.Area import Area
 
 
 class Character:
-    def __init__(self, x: int, y: int, need_redraw: bool) -> None:
+    def __init__(self, x: int, y: int) -> None:
         self.x: int = x
         self.y: int = y
-        self.char = "@"
+        self.character = "@"
         self.color = (0, 0, 255)
-        self.need_redraw = need_redraw
 
-    def tick(self, keyboard: Keyboard, area: Area) -> None:
+    def tick(self, keyboard: Keyboard) -> None:
         horizontal_movement = 0
         vertical_movement = 0
 
@@ -36,16 +34,14 @@ class Character:
         elif d_pressed and not a_pressed:
             horizontal_movement = 1
 
-        can_move = self.try_move(horizontal_movement, vertical_movement, area)
+        can_move = self.try_move(horizontal_movement, vertical_movement)
         if can_move:
             self.move(horizontal_movement, vertical_movement)
 
     def render(self, console: tcod.console.Console) -> None:
-        if self.need_redraw:
-            console.print(self.x, self.y, self.char, fg=self.color)
-            self.need_redraw = False
+        console.print(self.x, self.y, self.character, fg=self.color)
 
-    def try_move(self, dx: int, dy: int, area: Area) -> bool:
+    def try_move(self, dx: int, dy: int) -> bool:
         return True
 
     def move(self, dx: int, dy: int) -> None:

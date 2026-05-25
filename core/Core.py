@@ -11,7 +11,7 @@ class Core:
         self.row = 0
         self.column = 0
         self.keyboard = Keyboard()
-        self.world = World(rows=40, columns=40)
+        self.world = World()
 
     def run(self) -> None:
         BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,19 +21,23 @@ class Core:
         )
 
         with tcod.context.new(
-            columns=10,
-            rows=10,
+            columns=32,
+            rows=32,
             tileset=tileset,
             title="Text of The Necromancer",
         ) as context:
-            console = tcod.console.Console(width=10, height=10)
+            console = tcod.console.Console(width=32, height=32)
 
             console.clear()
 
-            self.world.render(console)
+            self.world.create_area("test", 0, 0)
+            area = self.world.get_area("test")
+            for x in range(100):
+                for y in range(100):
+                    area.create_cell(x, y, "#")
 
             while self.is_running:
-                for event in tcod.event.wait():
+                for event in tcod.event.get():
                     if isinstance(event, tcod.event.MouseMotion):
                         continue
                     elif isinstance(event, tcod.event.KeyDown):
@@ -53,11 +57,13 @@ class Core:
                             KeyCode.D, event.sym == tcod.event.KeySym.D
                         )
 
-                        if self.keyboard.get_pressed(KeyCode.Q):
-                            self.is_running = False
-                            break
+                if self.keyboard.get_pressed(KeyCode.Q):
+                    self.is_running = False
+                    break
 
-                        self.world.tick(self.keyboard)
-                        self.world.render(console)
+                console.clear()
 
-                    context.present(console=console, integer_scaling=True)
+                self.world.tick(self.keyboard)
+                self.world.render(console)
+
+                context.present(console=console, integer_scaling=True, keep_aspect=True)
