@@ -1,10 +1,8 @@
 import tcod
-from random import Random
 
 
 class Cell:
     def __init__(self, x: int, y: int, char: str, need_redraw: bool) -> None:
-        self.random = Random()
         self.x = x
         self.y = y
         self.char = char
@@ -21,7 +19,4 @@ class Cell:
     def render(self, console: tcod.console.Console) -> None:
         if self.need_redraw:
             console.print(self.x, self.y, self.char, fg=self.color)
-            self.set_need_redraw_state(False)
-
-    def set_need_redraw_state(self, need_redraw: bool) -> None:
-        self.need_redraw = need_redraw
+            self.need_redraw = False

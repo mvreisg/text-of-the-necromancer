@@ -2,7 +2,6 @@ import tcod
 from pathlib import Path
 from core.infrastructure.input.KeyCode import KeyCode
 from core.infrastructure.input.Keyboard import Keyboard
-from core.model.Character import Character
 from core.model.World import World
 
 
@@ -13,7 +12,6 @@ class Core:
         self.column = 0
         self.keyboard = Keyboard()
         self.world = World(rows=40, columns=40)
-        self.character = Character(x=0, y=0, need_redraw=True)
 
     def run(self) -> None:
         BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,18 +20,13 @@ class Core:
             FONT_PATH, 16, 16, tcod.tileset.CHARMAP_CP437
         )
 
-        self.world.generate()
-        self.world.add_character(self.character)
-
         with tcod.context.new(
-            columns=self.world.columns,
-            rows=self.world.rows,
+            columns=10,
+            rows=10,
             tileset=tileset,
             title="Text of The Necromancer",
         ) as context:
-            console = tcod.console.Console(
-                width=self.world.columns, height=self.world.rows
-            )
+            console = tcod.console.Console(width=10, height=10)
 
             console.clear()
 
@@ -41,7 +34,9 @@ class Core:
 
             while self.is_running:
                 for event in tcod.event.wait():
-                    if isinstance(event, tcod.event.KeyDown):
+                    if isinstance(event, tcod.event.MouseMotion):
+                        continue
+                    elif isinstance(event, tcod.event.KeyDown):
                         self.keyboard.set_pressed(
                             KeyCode.Q, event.sym == tcod.event.KeySym.Q
                         )
