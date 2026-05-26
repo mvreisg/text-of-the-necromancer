@@ -1,16 +1,18 @@
-import tcod
+from core.graphics.Viewport import Viewport
 from core.infrastructure.input.KeyCode import KeyCode
 from core.infrastructure.input.Keyboard import Keyboard
 
 
 class Character:
-    def __init__(self, x: int, y: int) -> None:
-        self.x: int = x
-        self.y: int = y
-        self.character = "@"
-        self.color = (0, 0, 255)
+    def __init__(
+        self, x: int, y: int, character: str, color: tuple[int, int, int]
+    ) -> None:
+        self.x = x
+        self.y = y
+        self.character = character
+        self.color = color
 
-    def tick(self, keyboard: Keyboard) -> None:
+    def tick(self, keyboard: Keyboard, viewport: Viewport, delta: float) -> None:
         horizontal_movement = 0
         vertical_movement = 0
 
@@ -37,9 +39,11 @@ class Character:
         can_move = self.try_move(horizontal_movement, vertical_movement)
         if can_move:
             self.move(horizontal_movement, vertical_movement)
+            viewport.translate(horizontal_movement, vertical_movement)
 
-    def render(self, console: tcod.console.Console) -> None:
-        console.print(self.x, self.y, self.character, fg=self.color)
+    def render(self, viewport: Viewport) -> None:
+        if viewport.is_inside(self.x, self.y):
+            viewport.set(self.x, self.y, self.character, self.color)
 
     def try_move(self, dx: int, dy: int) -> bool:
         return True

@@ -1,4 +1,4 @@
-import tcod
+from core.graphics.Viewport import Viewport
 from core.infrastructure.input.Keyboard import Keyboard
 from core.model.Character import Character
 from core.model.Cell import Cell
@@ -11,20 +11,28 @@ class Area:
         self.cells: list[Cell] = []
         self.characters: list[Character] = []
 
-    def tick(self, keyboard: Keyboard) -> None:
+    def tick(self, keyboard: Keyboard, viewport: Viewport, delta: float) -> None:
         for cell in self.cells:
-            cell.tick(keyboard)
+            cell.tick(keyboard, viewport, delta)
 
         for character in self.characters:
-            character.tick(keyboard)
+            character.tick(keyboard, viewport, delta)
 
-    def render(self, console: tcod.console.Console) -> None:
+    def render(self, viewport: Viewport) -> None:
         for cell in self.cells:
-            cell.render(console)
+            cell.render(viewport)
 
         for character in self.characters:
-            character.render(console)
+            character.render(viewport)
 
-    def create_cell(self, x: int, y: int, character: str) -> None:
-        cell = Cell(x, y, character)
+    def create_cell(
+        self, x: int, y: int, character: str, color: tuple[int, int, int]
+    ) -> None:
+        cell = Cell(x, y, character, color)
         self.cells.append(cell)
+
+    def create_character(
+        self, x: int, y: int, character: str, color: tuple[int, int, int]
+    ) -> None:
+        c = Character(x, y, character, color)
+        self.characters.append(c)
