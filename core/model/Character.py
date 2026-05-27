@@ -1,52 +1,49 @@
+from core.controllers.Player import Player
 from core.graphics.Viewport import Viewport
-from core.infrastructure.input.KeyCode import KeyCode
 from core.infrastructure.input.Keyboard import Keyboard
+from core.model.Cell import Cell
 
 
 class Character:
     def __init__(
-        self, x: int, y: int, character: str, color: tuple[int, int, int]
+        self, id: str, x: int, y: int, character: str, color: tuple[int, int, int]
     ) -> None:
+        self.id = id
         self.x = x
         self.y = y
         self.character = character
         self.color = color
 
-    def tick(self, keyboard: Keyboard, viewport: Viewport, delta: float) -> None:
-        horizontal_movement = 0
-        vertical_movement = 0
-
-        w_pressed = keyboard.get_pressed(KeyCode.W)
-        s_pressed = keyboard.get_pressed(KeyCode.S)
-        a_pressed = keyboard.get_pressed(KeyCode.A)
-        d_pressed = keyboard.get_pressed(KeyCode.D)
-
-        lock_movement = w_pressed and s_pressed and a_pressed and d_pressed
-        if lock_movement:
-            pass
-        elif w_pressed and not s_pressed:
-            vertical_movement = -1
-        elif s_pressed and not w_pressed:
-            vertical_movement = 1
-
-        if lock_movement:
-            pass
-        elif a_pressed and not d_pressed:
-            horizontal_movement = -1
-        elif d_pressed and not a_pressed:
-            horizontal_movement = 1
-
-        can_move = self.try_move(horizontal_movement, vertical_movement)
+    def tick(
+        self,
+        keyboard: Keyboard,
+        viewport: Viewport,
+        cells: list[Cell],
+        delta: float,
+        player: Player,
+    ) -> None:
+        dx = player.dx
+        dy = player.dy
+        can_move = self.try_move(dx, dy, cells)
         if can_move:
-            self.move(horizontal_movement, vertical_movement)
-            viewport.translate(horizontal_movement, vertical_movement)
+            self.move(dx, dy)
+            viewport.set_position(
+                self.x - int(viewport.width / 2),
+                self.y - int(viewport.height / 2),
+            )
+            viewport.translate(dx, dy)
 
     def render(self, viewport: Viewport) -> None:
         if viewport.is_inside(self.x, self.y):
             viewport.set(self.x, self.y, self.character, self.color)
 
-    def try_move(self, dx: int, dy: int) -> bool:
-        return True
+    def try_move(self, dx: int, dy: int, cells: list[Cell]) -> bool:
+        desired_x = self.x + dx
+        desired_y = self.y + dy
+        for cell in cells:
+            if cell.x == desired_x and cell.y == desired_y:
+                return True
+        return False
 
     def move(self, dx: int, dy: int) -> None:
         self.x += dx

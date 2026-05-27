@@ -1,3 +1,4 @@
+from core.controllers.Player import Player
 from core.graphics.Viewport import Viewport
 from core.infrastructure.input.Keyboard import Keyboard
 from core.model.Character import Character
@@ -11,12 +12,20 @@ class Area:
         self.cells: list[Cell] = []
         self.characters: list[Character] = []
 
-    def tick(self, keyboard: Keyboard, viewport: Viewport, delta: float) -> None:
+    def tick(
+        self,
+        keyboard: Keyboard,
+        viewport: Viewport,
+        delta: float,
+        players: list[Player],
+    ) -> None:
         for cell in self.cells:
             cell.tick(keyboard, viewport, delta)
 
         for character in self.characters:
-            character.tick(keyboard, viewport, delta)
+            for player in players:
+                if player.character_id == character.id:
+                    character.tick(keyboard, viewport, self.cells, delta, player)
 
     def render(self, viewport: Viewport) -> None:
         for cell in self.cells:
@@ -32,7 +41,7 @@ class Area:
         self.cells.append(cell)
 
     def create_character(
-        self, x: int, y: int, character: str, color: tuple[int, int, int]
+        self, id: str, x: int, y: int, character: str, color: tuple[int, int, int]
     ) -> None:
-        c = Character(x, y, character, color)
+        c = Character(id, x, y, character, color)
         self.characters.append(c)

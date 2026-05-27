@@ -6,4 +6,4 @@ class ViewportUnit:
         self.y = y
         self.character = character
         self.color = color
-        self.is_valid = False
+        self.must_draw = False

@@ -20,7 +20,7 @@ class Core:
         TARGET_FPS = 60.0
         TIME_PER_FRAME = 1.0 / TARGET_FPS
 
-        viewport = Viewport(0, 0, 32, 32)
+        viewport = Viewport(0, 0, 64, 64)
         viewport.generate()
         keyboard = Keyboard()
         world = World()
@@ -41,8 +41,8 @@ class Core:
                 for y in range(100):
                     area.create_cell(x, y, "#", (255, 255, 255))
 
-            area.create_character(0, 0, "@", (255, 0, 0))
-
+            area.create_character("main_character", 0, 0, "@", (255, 0, 0))
+            world.create_player("main_character")
             last_time = time.perf_counter()
 
             while self.is_running:
@@ -90,14 +90,13 @@ class Core:
                 if delta < TIME_PER_FRAME:
                     time.sleep(TIME_PER_FRAME - delta)
 
-                for y in range(viewport.height):
-                    for x in range(viewport.width):
-                        unit = viewport.get(x, y)
-                        if unit.is_valid == False:
+                for row in viewport.units:
+                    for unit in row:
+                        if unit.must_draw:
                             console.print(
                                 x=unit.x, y=unit.y, text=unit.character, fg=unit.color
                             )
-                            viewport.validate(x, y)
+                            unit.must_draw = False
 
                 context.present(console=console, integer_scaling=True, keep_aspect=True)
 
