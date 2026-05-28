@@ -1,4 +1,4 @@
-from core.graphics.viewport.ViewportUnit import ViewportUnit
+from core.infrastructure.graphics.viewport.ViewportUnit import ViewportUnit
 
 
 class Viewport:

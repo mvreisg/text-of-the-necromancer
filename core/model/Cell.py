@@ -1,4 +1,4 @@
-from core.graphics.Viewport import Viewport
+from core.infrastructure.graphics.Viewport import Viewport
 from core.infrastructure.input.Keyboard import Keyboard
 
 

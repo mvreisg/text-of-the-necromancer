@@ -1,5 +1,5 @@
-from core.infrastructure.input.Key import Key
-from core.infrastructure.input.KeyCode import KeyCode
+from core.infrastructure.input.keyboard.Key import Key
+from core.infrastructure.input.keyboard.KeyCode import KeyCode
 
 
 class Keyboard:

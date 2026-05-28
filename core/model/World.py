@@ -1,6 +1,6 @@
 from core.controllers.Player import Player
 from core.controllers.human.HumanPlayer import HumanPlayer
-from core.graphics.Viewport import Viewport
+from core.infrastructure.graphics.Viewport import Viewport
 from core.infrastructure.input.Keyboard import Keyboard
 from core.model.Area import Area
 

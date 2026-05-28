@@ -1,8 +1,8 @@
 import time
 import tcod
 from pathlib import Path
-from core.graphics.Viewport import Viewport
-from core.infrastructure.input.KeyCode import KeyCode
+from core.infrastructure.graphics.Viewport import Viewport
+from core.infrastructure.input.keyboard.KeyCode import KeyCode
 from core.infrastructure.input.Keyboard import Keyboard
 from core.model.World import World
 

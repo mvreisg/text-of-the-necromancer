@@ -1,4 +1,4 @@
-from core.infrastructure.input.KeyCode import KeyCode
+from core.infrastructure.input.keyboard.KeyCode import KeyCode
 from core.infrastructure.input.Keyboard import Keyboard
 from core.controllers.Player import Player
 
