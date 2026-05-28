@@ -43,7 +43,7 @@ class Core:
 
             area.create_character("main_character", 0, 0, "@", (255, 0, 0))
             world.create_player("main_character")
-            last_time = time.perf_counter()
+            last_time = tcod.event.time()
 
             while self.is_running:
                 for event in tcod.event.get():
@@ -84,7 +84,7 @@ class Core:
 
                 console.clear()
 
-                delta = time.perf_counter() - last_time
+                delta = tcod.event.time() - last_time
                 world.tick(keyboard, viewport, delta)
                 world.render(viewport)
                 if delta < TIME_PER_FRAME:
@@ -100,4 +100,4 @@ class Core:
 
                 context.present(console=console, integer_scaling=True, keep_aspect=True)
 
-                last_time = time.perf_counter()
+                last_time = tcod.event.time()
