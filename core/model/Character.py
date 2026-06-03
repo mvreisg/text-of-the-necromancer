@@ -31,7 +31,6 @@ class Character:
                 self.x - int(viewport.width / 2),
                 self.y - int(viewport.height / 2),
             )
-            viewport.translate(dx, dy)
 
     def render(self, viewport: Viewport) -> None:
         if viewport.is_inside(self.x, self.y):

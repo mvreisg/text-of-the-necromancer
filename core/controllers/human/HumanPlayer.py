@@ -16,17 +16,11 @@ class HumanPlayer(Player):
         a_pressed = keyboard.get_pressed(KeyCode.A)
         d_pressed = keyboard.get_pressed(KeyCode.D)
 
-        lock_movement = w_pressed and s_pressed and a_pressed and d_pressed
-        if lock_movement:
-            pass
-        elif w_pressed and not s_pressed:
+        if w_pressed and not s_pressed and not a_pressed and not d_pressed:
             self.dy = -1
-        elif s_pressed and not w_pressed:
+        elif s_pressed and not w_pressed and not a_pressed and not d_pressed:
             self.dy = 1
-
-        if lock_movement:
-            pass
-        elif a_pressed and not d_pressed:
+        elif a_pressed and not d_pressed and not w_pressed and not s_pressed:
             self.dx = -1
-        elif d_pressed and not a_pressed:
+        elif d_pressed and not a_pressed and not w_pressed and not s_pressed:
             self.dx = 1

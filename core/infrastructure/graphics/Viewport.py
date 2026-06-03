@@ -30,25 +30,7 @@ class Viewport:
         self.x = x
         self.y = y
 
-    def translate(self, dx: int, dy: int) -> None:
-        self.x += dx
-        self.y += dy
-
     def set(self, x: int, y: int, character: str, color: tuple[int, int, int]) -> None:
-        # -20 = 0
-        #  30 = 50
-
-        #  0  = 0
-        #  50 = 50
-
-        #  20  = 0
-        #  70 = 50
-
-        #  VP    EN
-        # -20 : -30 = -10
-        # -20 : -20 =  0
-        # -20 : -10 =  10
-        # -20 :   0 =  20
         relative_x = abs(self.x - x)
         relative_y = abs(self.y - y)
         unit = self.units[relative_x][relative_y]
